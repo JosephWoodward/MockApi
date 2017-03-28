@@ -1,4 +1,15 @@
 {
-  "Uri": "/hello",
-  "Name": "hello"
+  "interactions": [{
+    "request": {
+      "method": "get",
+      "path": "/hello",
+      "headers": {
+        "Accept":"application/json"
+      }
+    },
+    "response": {
+      "status": 200,
+      "body":{}
+    }
+  }]
 }

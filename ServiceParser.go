@@ -3,23 +3,32 @@ package main
 import (
 	"io/ioutil"
 	"encoding/json"
+	"fmt"
 )
 
-type service []byte
-
-
 type HttpEndpoint struct {
-	Uri string
-	Name string
+	Interactions []Interaction
+}
+
+type Interaction struct {
+	Request Request
+}
+
+type Request struct {
+	Method string
+	Path string
 }
 
 type ServiceParser struct {}
 
-func ParseService(filename string) ([]HttpEndpoint, error) {
+func ParseService(filename string) (HttpEndpoint, error) {
 	body, readFileErr := ioutil.ReadFile("service.json")
+	if readFileErr != nil {
+		fmt.Println("Error reading file", readFileErr)
+	}
 
 	var endpoint HttpEndpoint
-	err := json.Unmarshal([]byte(body), &endpoint)
+	err := json.Unmarshal(body, &endpoint)
 
-	return body, readFileErr
+	return endpoint, err
 }

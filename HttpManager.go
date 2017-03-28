@@ -5,8 +5,14 @@ import (
 	"net/http"
 )
 
+var httpMaps = make(map[string]Interaction)
+
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
+
+
+	url := r.URL.Path[1:]
+	fmt.Fprintf(w, "Hi there, I love %s!", url)
+
 }
 
 func MockApiGo() {
@@ -17,11 +23,12 @@ func MockApiGo() {
 
 	fmt.Printf("%+v\n",  httpApi)
 
-	maps := map[string]Interaction
-	for i, v := range httpApi.Interactions {
-		maps.
+	for _, interaction := range httpApi.Interactions {
+		fmt.Println(interaction.Request.Path)
+
+		httpMaps[interaction.Request.Path] = interaction
 	}
 
-	//http.HandleFunc("/", handler)
-	//http.ListenAndServe(":8080", nil)
+	http.HandleFunc("/", handler)
+	http.ListenAndServe(":8080", nil)
 }

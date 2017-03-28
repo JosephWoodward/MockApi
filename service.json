@@ -11,5 +11,18 @@
       "status": 200,
       "body":{}
     }
-  }]
+  },
+    {
+      "request": {
+        "method": "get",
+        "path": "/goodbye",
+        "headers": {
+          "Accept":"application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body":{}
+      }
+    }]
 }

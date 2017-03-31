@@ -3,32 +3,62 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 var httpMaps = make(map[string]Interaction)
-
-func handler(w http.ResponseWriter, r *http.Request) {
-
-
-	url := r.URL.Path[1:]
-	fmt.Fprintf(w, "Hi there, I love %s!", url)
-
+var writeError = func(w http.ResponseWriter, request *http.Request) {
+	http.Error(w, "Endpoint not found", http.StatusNotFound)
 }
 
-func MockApiGo() {
-	httpApi, err := ParseService("service.json")
+func handler(w http.ResponseWriter, request *http.Request) {
+
+	// TODO: Tidy up
+	// Path exists
+	path := request.URL.Path[0:]
+	interaction, exists := httpMaps[path]
+	if !exists {
+		writeError(w, request)
+		return
+	}
+
+	// Correct method
+	if strings.ToLower(request.Method) != strings.ToLower(interaction.Request.Method) {
+		writeError(w, request)
+		return
+	}
+
+	// Correct header accept type
+	//header := request.Header.Get("accept")
+	//if strings.ToLower(header) == "application/json" {
+	//	writeError(w, request)
+	//	return
+	//}
+
+	for _, header := range interaction.Response.Headers  {
+		_ = header
+	}
+
+	// Write response
+	w.Header().Add("status", "200")
+	w.Write([]byte("Testing"))
+}
+
+func MockApiGo(filename string) {
+	httpApi, err := ParseService(filename)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Printf("%+v\n",  httpApi)
-
 	for _, interaction := range httpApi.Interactions {
-		fmt.Println(interaction.Request.Path)
-
-		httpMaps[interaction.Request.Path] = interaction
+		_, exists := httpMaps[interaction.Request.Path]
+		if !exists {
+			httpMaps[interaction.Request.Path] = interaction
+		} else {
+			panic("Duplicate keys")
+		}
 	}
 
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8082", nil)
 }

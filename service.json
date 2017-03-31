@@ -2,27 +2,31 @@
   "interactions": [{
     "request": {
       "method": "get",
-      "path": "/hello",
-      "headers": {
-        "Accept":"application/json"
-      }
+      "path": "/hello"
     },
     "response": {
       "status": 200,
-      "body":{}
+      "headers": [
+        { "contentType":"application/json" }
+      ],
+      "body": {
+        "content" :""
+      }
     }
   },
     {
       "request": {
         "method": "get",
-        "path": "/goodbye",
-        "headers": {
-          "Accept":"application/json"
-        }
+        "path": "/goodbye"
       },
       "response": {
         "status": 200,
-        "body":{}
+        "headers": [
+          { "contentType":"application/json" }
+        ],
+        "body": {
+          "content" :""
+        }
       }
     }]
 }
